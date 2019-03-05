@@ -122,7 +122,6 @@ export default {
       this.town.text = item;
       this.town.value = index;
       this.$emit("town", this.town.text, this.town.value);
-      console.log("ok")
     }
   }
 };
