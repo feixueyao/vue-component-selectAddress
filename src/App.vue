@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <addressSelect></addressSelect>
+    <address-select></address-select>
   </div>
 </template>
 

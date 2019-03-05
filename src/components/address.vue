@@ -2,28 +2,36 @@
   <div class="selectArea">
     <ul class="address">
       <li class="province addressList" @click="getProvince()">
-        {{selectPro.text}}
+        {{province.text}}
         <i class="icon" :class="{active:status1}"></i>
         <ul class="list provinceList" :class="{hide:!status1}">
-          <li v-for="(item, index) in province" :key="index" @click="choosePro(item,index)">
-            <p>{{item}}</p>
+          <li v-for="(item,index) in addressList" :key="index" @click="choosePro(item,index)">
+            <p>{{item.name}}</p>
           </li>
         </ul>
       </li>
       <li class="city addressList" @click="getCity()">
-        {{selectCity.text}}
+        {{city.text}}
         <i class="icon" :class="{active:status2}"></i>
         <ul class="list cityList" :class="{hide:!status2}">
-          <li v-for="(item, index) in city" :key="index" @click="chooseCity(item,index)">
-            <p>{{item}}</p>
+          <li
+            v-for="(item,index) in addressList[province.value].city"
+            :key="index"
+            @click="chooseCity(item, index)"
+          >
+            <p>{{item.name}}</p>
           </li>
         </ul>
       </li>
       <li class="town addressList" @click="getTown()">
-        {{selectTown.text}}
+        {{town.text}}
         <i class="icon" :class="{active:status3}"></i>
         <ul class="list townList" :class="{hide:!status3}">
-          <li v-for="(item, index) in town" :key="index" @click="chooseTown(item,index)">
+          <li
+            v-for="(item,index) in addressList[province.value].city[city.value].area"
+            :key="index"
+            @click="chooseTown(item,index)"
+          >
             <p>{{item}}</p>
           </li>
         </ul>
@@ -31,8 +39,9 @@
     </ul>
   </div>
 </template>
-
 <script>
+import selectData from "./selectOption.js";
+
 export default {
   name: "",
   data() {
@@ -43,25 +52,22 @@ export default {
     };
   },
   props: {
-    province: {
+    addressList: {
       type: Array,
       default: function() {
-        return ["11", "22", "33", "44", "55"];
+        return selectData;
       }
     },
-    town: {
-      type: Array,
+    province: {
+      type: Object,
       default: function() {
-        return ["11", "22"];
+        return {
+          value: 0,
+          text: "请选择"
+        };
       }
     },
     city: {
-      type: Array,
-      default: function() {
-        return ["11", "22"];
-      }
-    },
-    selectPro: {
       type: Object,
       default: function() {
         return {
@@ -70,16 +76,7 @@ export default {
         };
       }
     },
-    selectCity: {
-      type: Object,
-      default: function() {
-        return {
-          value: 0,
-          text: "请选择"
-        };
-      }
-    },
-    selectTown: {
+    town: {
       type: Object,
       default: function() {
         return {
@@ -92,24 +89,39 @@ export default {
   methods: {
     getProvince() {
       this.status1 = !this.status1;
+      this.status2 = false;
+      this.status3 = false;
     },
     getCity() {
       this.status2 = !this.status2;
+      this.status1 = false;
+      this.status3 = false;
     },
     getTown() {
       this.status3 = !this.status3;
+      this.status2 = false;
+      this.status1 = false;
     },
     choosePro(item, index) {
-      this.selectPro.text = item;
-      this.$emit("province", this.selectPro.text, this.selectPro.value);
+      this.province.text = item.name;
+      this.province.value = index;
+      this.$emit("province", this.province.text, this.province.value);
+      this.city.text = "请选择";
+      this.city.value = 0;
+      this.$emit("city", this.city.text, this.city.value);
+      this.town.text = "请选择";
+      this.town.value = 0;
+      this.$emit("town", this.town.text, this.town.value);
     },
     chooseCity(item, index) {
-      this.selectCity.text = item;
-      this.$emit("city", this.selectCity.text, this.selectCity.value);
+      this.city.text = item.name;
+      this.city.value = index;
+      this.$emit("city", this.city.text, this.city.value);
     },
     chooseTown(item, index) {
-      this.selectTown.text = item;
-      this.$emit("town", this.selectTown.text, this.selectTown.value);
+      this.town.text = item;
+      this.town.value = index;
+      this.$emit("town", this.town.text, this.town.value);
     }
   }
 };
@@ -119,12 +131,15 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
+	user-select: none;
+	-webkit-user-select: none;
 }
 .hide {
   display: none;
 }
 .selectArea {
-  width: 360px;
+  width: 100%;
   height: 32px;
   line-height: 32px;
   margin: 0 auto;
@@ -148,9 +163,9 @@ export default {
   position: absolute;
   right: 3px;
   top: 50%;
-  width: 10px;
-  height: 10px;
-  margin-top: -5px;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
   background: url(../assets/icon.png) no-repeat;
   background-size: contain;
 }
@@ -162,8 +177,8 @@ export default {
   top: 32px;
   left: -1px;
   width: 100%;
-  height: 120px;
-  border: 1px solid #b5b6a9;
+  max-height: 120px;
+  border: 1px solid #d6d6d2;
   overflow-y: scroll;
 }
 .list li {
