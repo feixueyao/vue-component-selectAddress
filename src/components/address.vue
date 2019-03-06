@@ -1,9 +1,9 @@
 <template>
   <div class="selectArea">
     <ul class="address">
-      <li class="province addressList" @click="getProvince()">
+      <li class="province addressList" @click="getProvince()" >
         {{province.text}}
-        <i class="icon" :class="{active:status1}"></i>
+        <i class="icon" :class="{active:status1}" :style="{backgroundImage:'url('+ iconBg +')', backgroundSize: 'contain'}"></i>
         <ul class="list provinceList" :class="{hide:!status1}">
           <li v-for="(item,index) in addressList" :key="index" @click="choosePro(item,index)">
             <p>{{item.name}}</p>
@@ -12,12 +12,13 @@
       </li>
       <li class="city addressList" @click="getCity()">
         {{city.text}}
-        <i class="icon" :class="{active:status2}"></i>
+        <i class="icon" :class="{active:status2}" :style="{backgroundImage:'url('+ iconBg +')', backgroundSize: 'contain'}"></i>
         <ul class="list cityList" :class="{hide:!status2}">
           <li
             v-for="(item,index) in addressList[province.value].city"
             :key="index"
             @click="chooseCity(item, index)"
+            
           >
             <p>{{item.name}}</p>
           </li>
@@ -25,7 +26,7 @@
       </li>
       <li class="town addressList" @click="getTown()">
         {{town.text}}
-        <i class="icon" :class="{active:status3}"></i>
+        <i class="icon" :class="{active:status3}" :style="{backgroundImage:'url('+ iconBg +')', backgroundSize: 'contain'}"></i>
         <ul class="list townList" :class="{hide:!status3}">
           <li
             v-for="(item,index) in addressList[province.value].city[city.value].area"
@@ -48,7 +49,8 @@ export default {
     return {
       status1: false,
       status2: false,
-      status3: false
+      status3: false,
+      iconBg:require('./images/icon.png')
     };
   },
   props: {
@@ -155,6 +157,8 @@ export default {
   height: 100%;
   list-style: none;
   border: 1px solid #d6d6d2;
+  color:#333;
+  font-size:14px;
 }
 .address .city {
   margin: 0 3px;
@@ -166,7 +170,7 @@ export default {
   width: 6px;
   height: 6px;
   margin-top: -3px;
-  background: url(../assets/icon.png) no-repeat;
+  /* background: url(./images/icon.png) no-repeat; */
   background-size: contain;
 }
 .active {

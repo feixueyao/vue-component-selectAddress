@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <address-select></address-select>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import addressSelect from '@/components/address'
+
+import addressSelect from './components/address'
 export default {
 
   name: 'App',

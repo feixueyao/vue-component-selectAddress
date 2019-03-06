@@ -15,6 +15,9 @@
     "flint": "eslint --fix --ext .js ./src/js/* ./build/*"
   },
   "dependencies": {
+    "select-0305": "^1.0.0",
+    "select-0306": "^1.0.0",
+    "selects-0306": "^1.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
